@@ -1,4 +1,5 @@
 using System;
+using System.Buffers.Text;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -10,10 +11,12 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using BBDown.Core.Util;
 using static BBDown.Core.Entity.Entity;
 using static BBDown.Core.Logger;
 using static BBDown.Core.Util.HTTPUtil;
@@ -206,6 +209,25 @@ namespace BBDown
             return location.Contains("/ep") ? $"ep:{EpRegex().Match(location).Groups[1].Value}" : avid;
         }
 
+
+        //private static String Ddaaa B = 
+        
+        // function(t) {
+        //     var e = (new TextEncoder).encode(t).buffer
+        //         , n = new Uint8Array(e)
+        //         , r = btoa(String.fromCharCode.apply(null, n));
+        //     return r.substring(0, r.length - 2);
+        // };
+
+        private static string GetDmCoverImgStr()
+        {
+            byte[] buffer = Encoding.UTF8.GetBytes(UserAgent);
+            string base64 = Convert.ToBase64String(buffer);
+            return base64[..^2];
+        }
+
+        public static string DmCoverImgStr { get; set; } = GetDmCoverImgStr();
+
         private static string GetAidByBV(string bv)
         {
             // 能在本地就在本地
@@ -214,7 +236,7 @@ namespace BBDown
 
         private static async Task<string> GetEpidBySSIdAsync(string ssid)
         {
-            string api = $"https://api.bilibili.com/pugv/view/web/season?season_id={ssid}";
+            string api = $"https://api.bilibili.com/pugv/view/web/season?season_id={ssid}?dm_cover_img_str={DmCoverImgStr}";
             string json = await GetWebSourceAsync(api);
             using var jDoc = JsonDocument.Parse(json);
             string epId = jDoc.RootElement.GetProperty("data").GetProperty("episodes").EnumerateArray().First().GetProperty("id").ToString();
