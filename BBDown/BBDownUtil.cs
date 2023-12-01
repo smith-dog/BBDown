@@ -219,15 +219,6 @@ namespace BBDown
         //     return r.substring(0, r.length - 2);
         // };
 
-        private static string GetDmCoverImgStr()
-        {
-            byte[] buffer = Encoding.UTF8.GetBytes(UserAgent);
-            string base64 = Convert.ToBase64String(buffer);
-            return base64[..^2];
-        }
-
-        public static string DmCoverImgStr { get; set; } = GetDmCoverImgStr();
-
         private static string GetAidByBV(string bv)
         {
             // 能在本地就在本地

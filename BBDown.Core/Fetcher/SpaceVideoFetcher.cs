@@ -13,13 +13,13 @@ namespace BBDown.Core.Fetcher
         {
             id = id[4..];
             // using the live API can bypass w_rid
-            string userInfoApi = $"https://api.live.bilibili.com/live_user/v1/Master/info?uid={id}";
+            string userInfoApi = $"https://api.live.bilibili.com/live_user/v1/Master/info?uid={id}&dm_cover_img_str={DmCoverImgStr}";
             string userName = GetValidFileName(JsonDocument.Parse(await GetWebSourceAsync(userInfoApi)).RootElement.GetProperty("data").GetProperty("info").GetProperty("uname").ToString(), ".", true);
             List<string> urls = new();
             int pageSize = 50;
             int pageNumber = 1;
             var api = Parser.WbiSign($"mid={id}&order=pubdate&pn={pageNumber}&ps={pageSize}&tid=0&wts={DateTimeOffset.Now.ToUnixTimeSeconds().ToString()}");
-            api = $"https://api.bilibili.com/x/space/wbi/arc/search?{api}";
+            api = $"https://api.bilibili.com/x/space/wbi/arc/search?{api}&dm_cover_img_str={DmCoverImgStr}";
             string json = await GetWebSourceAsync(api);
             var infoJson = JsonDocument.Parse(json);
             var pages = infoJson.RootElement.GetProperty("data").GetProperty("list").GetProperty("vlist").EnumerateArray();
@@ -48,7 +48,7 @@ pause");
         {
             List<string> urls = new();
             var api = Parser.WbiSign($"mid={mid}&order=pubdate&pn={pageNumber}&ps={pageSize}&tid=0&wts={DateTimeOffset.Now.ToUnixTimeSeconds().ToString()}");
-            api = $"https://api.bilibili.com/x/space/wbi/arc/search?{api}";
+            api = $"https://api.bilibili.com/x/space/wbi/arc/search?{api}&dm_cover_img_str={DmCoverImgStr}";
             string json = await GetWebSourceAsync(api);
             var infoJson = JsonDocument.Parse(json);
             var pages = infoJson.RootElement.GetProperty("data").GetProperty("list").GetProperty("vlist").EnumerateArray();

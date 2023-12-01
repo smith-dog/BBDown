@@ -1,12 +1,22 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Text;
 using static BBDown.Core.Logger;
 
 namespace BBDown.Core.Util
 {
     public class HTTPUtil
     {
+        public static string DmCoverImgStr { get; set; } = GetDmCoverImgStr();
+
+        private static string GetDmCoverImgStr()
+        {
+            byte[] buffer = Encoding.UTF8.GetBytes(UserAgent);
+            string base64 = Convert.ToBase64String(buffer);
+            return base64[..^2];
+        }
+
 
         public static readonly HttpClient AppHttpClient = new(new HttpClientHandler
         {

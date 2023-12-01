@@ -11,7 +11,7 @@ namespace BBDown.Core.Fetcher
         {
             id = id[7..];
             string index = "";
-            string api = $"https://api.bilibili.com/pugv/view/web/season?ep_id={id}";
+            string api = $"https://api.bilibili.com/pugv/view/web/season?ep_id={id}&dm_cover_img_str={DmCoverImgStr}";
             string json = await GetWebSourceAsync(api);
             using var infoJson = JsonDocument.Parse(json);
             var data = infoJson.RootElement.GetProperty("data");
