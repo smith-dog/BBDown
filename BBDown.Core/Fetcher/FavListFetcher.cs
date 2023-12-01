@@ -21,7 +21,7 @@ namespace BBDown.Core.Fetcher
             //查找默认收藏夹
             if (favId == "")
             {
-                var favListApi = $"https://api.bilibili.com/x/v3/fav/folder/created/list-all?up_mid={mid}";
+                var favListApi = $"https://api.bilibili.com/x/v3/fav/folder/created/list-all?up_mid={mid}&dm_cover_img_str={DmCoverImgStr}";
                 favId = JsonDocument.Parse(await GetWebSourceAsync(favListApi)).RootElement.GetProperty("data").GetProperty("list").EnumerateArray().First().GetProperty("id").ToString();
             }
 
@@ -29,7 +29,7 @@ namespace BBDown.Core.Fetcher
             int index = 1;
             List<Page> pagesInfo = new();
 
-            var api = $"https://api.bilibili.com/x/v3/fav/resource/list?media_id={favId}&pn=1&ps={pageSize}&order=mtime&type=2&tid=0&platform=web";
+            var api = $"https://api.bilibili.com/x/v3/fav/resource/list?media_id={favId}&pn=1&ps={pageSize}&order=mtime&type=2&tid=0&platform=web&dm_cover_img_str={DmCoverImgStr}";
             var json = await GetWebSourceAsync(api);
             using var infoJson = JsonDocument.Parse(json);
             var data = infoJson.RootElement.GetProperty("data");
@@ -43,7 +43,7 @@ namespace BBDown.Core.Fetcher
 
             for (int page = 2; page <= totalPage; page++)
             {
-                api = $"https://api.bilibili.com/x/v3/fav/resource/list?media_id={favId}&pn={page}&ps={pageSize}&order=mtime&type=2&tid=0&platform=web";
+                api = $"https://api.bilibili.com/x/v3/fav/resource/list?media_id={favId}&pn={page}&ps={pageSize}&order=mtime&type=2&tid=0&platform=web&dm_cover_img_str={DmCoverImgStr}";
                 json = await GetWebSourceAsync(api);
                 var jsonDoc = JsonDocument.Parse(json);
                 data = jsonDoc.RootElement.GetProperty("data");
