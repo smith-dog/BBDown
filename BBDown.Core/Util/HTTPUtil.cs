@@ -12,7 +12,7 @@ namespace BBDown.Core.Util
 
         private static string GetDmCoverImgStr()
         {
-            byte[] buffer = Encoding.UTF8.GetBytes(UserAgent);
+            byte[] buffer = Encoding.UTF8.GetBytes(HTTPUtil.UserAgent);
             string base64 = Convert.ToBase64String(buffer);
             return base64[..^2];
         }
